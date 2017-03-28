@@ -1,0 +1,45 @@
+{
+    "memo": "b5e5b90214c1630c64f2a842b6009e8f3d48d50f919b0d0d349cb99ae7b8080b",
+    "projects": [
+        {
+            "name": "github.com/golang/protobuf",
+            "branch": "master",
+            "revision": "c9c7427a2a70d2eb3bafa0ab2dc163e45f143317",
+            "packages": [
+                "proto"
+            ]
+        },
+        {
+            "name": "github.com/pkg/errors",
+            "version": "v0.8.0",
+            "revision": "645ef00459ed84a119197bfb8d8205042c6df63d",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "golang.org/x/net",
+            "branch": "master",
+            "revision": "6c23252515492caf9b228a9d5cabcdbde29f7f82",
+            "packages": [
+                "context"
+            ]
+        },
+        {
+            "name": "google.golang.org/appengine",
+            "version": "v1.0.0",
+            "revision": "150dc57a1b433e64154302bdc40b6bb8aefa313a",
+            "packages": [
+                ".",
+                "internal",
+                "internal/app_identity",
+                "internal/base",
+                "internal/datastore",
+                "internal/log",
+                "internal/modules",
+                "internal/remote_api",
+                "log"
+            ]
+        }
+    ]
+}

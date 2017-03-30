@@ -27,14 +27,12 @@ var addr = "0.0.0.0:8080"
 
 // log messages
 const (
-	started          = "info=started app=helloworld\n"
+	started          = "\n** STARTED **\ninfo=started app=helloworld\n"
 	release          = "info=version:%s buildstamp:%s githash:%s app=helloworld\n"
-	stopped          = "info=stopped app=helloworld\n"
+	stopped          = "info=stopped app=helloworld\n** STOPPED **\n"
 	stoppedWithError = "err=%s app=helloworld\n"
 	running          = "info=listens on address %s app=helloworld\n"
 	gotStopSignal    = "\ninfo=got signal %s app=helloworld\n"
-	request          = "info=%s %s  [ 200 ok ] app=helloworld\n"
-	notFound         = "info=%s %s  [ 404 not found ] app=helloworld\n"
 )
 
 func main() {
@@ -68,7 +66,7 @@ func run(args []string, log io.Writer) bool {
 	httpAddr := parseAddr(args)
 
 	http.HandleFunc(health.Handler())
-	http.HandleFunc("/", landing(log))
+	http.HandleFunc("/", landing)
 
 	ch := make(chan error, 1)
 	go func() {
@@ -89,19 +87,15 @@ func run(args []string, log io.Writer) bool {
 	}
 }
 
-func landing(log io.Writer) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			http.NotFound(w, r)
-			fmt.Fprintf(log, notFound, r.Method, r.RequestURI)
-			return
-		}
-		fmt.Fprint(w, landingPage)
-		fmt.Fprintf(log, request, r.Method, r.RequestURI)
+func landing(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
 	}
+	fmt.Fprint(w, landingPage)
 }
 
-const landingPage = "Hello World\n"
+const landingPage = "Welcome to Hellow world\n"
 
 func parseAddr(args []string) string {
 	flag.StringVar(&addr, "http", addr, "HTTP service address.")

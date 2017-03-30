@@ -1,0 +1,49 @@
+service: default
+runtime: custom
+env: flex
+
+# https://cloud.google.com/appengine/docs/flexible/go/configuration-files
+# https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml
+
+# dev
+manual_scaling:
+  instances: 1
+
+resources:
+  cpu: 1           # default
+  memory_gb: 0.6   # default
+  disk_size_gb: 10 # default
+
+health_check:
+  enable_health_check: True # default
+  check_interval_sec: 1     # default is 5
+  timeout_sec: 1            # default is 4
+  unhealthy_threshold: 2    # default
+  healthy_threshold: 2      # default
+
+# if addr := os.Getenv("ADDR"); addr != "" { ... }
+# env_variables:
+#  ADDR: '0.0.0.0:80'
+
+#skip_files:
+#  - ^Makefile$
+#  - ^bin$
+
+
+#
+# prod
+#resources:
+#  cpu: 2
+#  memory_gb: 2.3
+#  disk_size_gb: 10
+#  volumes:
+#  - name: ramdisk1
+#    volume_type: tmpfs
+#    size_gb: 0.5
+#
+#automatic_scaling:
+#  min_num_instances: 5
+#  max_num_instances: 20
+#  cool_down_period_sec: 120 # default value
+#  cpu_utilization:
+#    target_utilization: 0.5

@@ -36,6 +36,11 @@ const (
 )
 
 func main() {
+	// test to log to stderr
+	fmt.Fprintln(os.Stderr, "err=this is an error!")
+	logEnv()
+	fmt.Println(started)
+
 	if ok := run(os.Args, os.Stdout); !ok {
 		os.Exit(1)
 	}
@@ -61,7 +66,6 @@ func main() {
 // Headers to set: Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 func run(args []string, log io.Writer) bool {
-	fmt.Fprint(log, started)
 	fmt.Fprintf(log, release, Version, Buildstamp, Githash)
 	httpAddr := parseAddr(args)
 
@@ -85,6 +89,23 @@ func run(args []string, log io.Writer) bool {
 		fmt.Fprint(log, stopped)
 		return true
 	}
+}
+
+func logEnv() {
+	proj := os.Getenv("GCLOUD_PROJECT")
+	fmt.Println("GCLOUD_PROJECT", proj)
+
+	instance := os.Getenv("GAE_INSTANCE")
+	fmt.Println("GAE_INSTANCE", instance)
+
+	srv := os.Getenv("GAE_SERVICE")
+	fmt.Println("GAE_SERVICE", srv)
+
+	version := os.Getenv("GAE_VERSION")
+	fmt.Println("GAE_VERSION", version)
+
+	my := os.Getenv("MY_ENV")
+	fmt.Println("MY_ENV", my)
 }
 
 func landing(w http.ResponseWriter, r *http.Request) {

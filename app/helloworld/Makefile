@@ -12,6 +12,8 @@ httpPort=$(shell echo "$(http)" | sed 's/\://g')
 
 # appengine projectID
 # projectID="your project id"
+SERVICE_NAME=default
+REMOTE_IMAGE=gcr.io/$(projectID)/$(IMAGE)
 
 .PHONY: help
 help:
@@ -21,9 +23,9 @@ help:
 	@echo "Commands:"
 	@echo "    make build         # builds a docker image: $(IMAGE)"
 	@echo "    make ae/push       # push $(IMAGE) to appeninge"
-	@echo "    make ae/deploy     # deploy and start gcr.io/$(projectID)/$(IMAGE) as version: dev"
-	@echo "    make ae/start      # start gcr.io/$(projectID)/$(IMAGE) as version: dev"
-	@echo "    make ae/stop       # stop gcr.io/$(projectID)/$(IMAGE) as version: dev"
+	@echo "    make ae/deploy     # deploy and start $(REMOTE_IMAGE) as version: dev"
+	@echo "    make ae/start      # start $(REMOTE_IMAGE) as version: dev"
+	@echo "    make ae/stop       # stop $(REMOTE_IMAGE) as version: dev"
 	@echo "    make ae/list       # list services on appengine"
 	@echo "    make ae/tail       # tail log on appengine"
 	@echo "    make test          # runs the tests"
@@ -58,29 +60,29 @@ build: test lint
 
 .PHONY: ae/push
 ae/push: #build
-	docker tag helloworld:0.0.2 gcr.io/netlyn-162914/$(IMAGE)
-	gcloud docker -- push gcr.io/$(projectID)/$(IMAGE)
+	docker tag $(IMAGE) $(REMOTE_IMAGE)
+	gcloud docker -- push $(REMOTE_IMAGE)
 
 .PHONY: ae/deploy
 ae/deploy:
-	gcloud app deploy app-dev.yaml --image-url gcr.io/$(projectID)/$(IMAGE) --version dev
+	gcloud app deploy app-dev.yaml --image-url $(REMOTE_IMAGE) --version dev
 
 .PHONY: ae/start
 ae/start:
-	gcloud app versions start dev --service=default
+	gcloud app versions start dev --service=$(SERVICE_NAME)
 
 .PHONY: ae/stop
 ae/stop:
-	gcloud app versions stop dev --service=default
+	gcloud app versions stop dev --service=$(SERVICE_NAME)
 .PHONY: ae/stop
 
 .PHONY: ae/list
 ae/list:
-	gcloud app versions list --service=default
+	gcloud app versions list --service=$(SERVICE_NAME)
 
 .PHONY: ae/tail
 ae/tail:
-	gcloud app logs tail --service=default
+	gcloud app logs tail --service=$(SERVICE_NAME)
 
 .PHONY: test
 test:
@@ -137,5 +139,5 @@ check:
 clean:
 	docker ps -a | grep $(PROG) | awk '{print $$1}' | xargs docker stop
 	docker ps -a | grep $(PROG) | awk '{print $$1}' | xargs docker rm
-	docker images $(PROG) -q | xargs docker rmi
+	docker images $(PROG) -q | xargs docker rmi -f
 	docker images | grep none | awk '{print $$3}' | xargs docker rmi

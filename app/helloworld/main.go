@@ -36,32 +36,15 @@ const (
 )
 
 func main() {
+	fmt.Println(started)
 	// test to log to stderr
 	fmt.Fprintln(os.Stderr, "err=this is an error!")
 	logEnv()
-	fmt.Println(started)
 
 	if ok := run(os.Args, os.Stdout); !ok {
 		os.Exit(1)
 	}
 }
-
-// ENV
-// GCLOUD_PROJECT
-// GAE_INSTANCE
-// GAE_SERVICE
-// GAE_VERSION
-
-// The following HTTP headers are now included with all requests:
-// X-FORWARDED-FOR
-// X-CLOUD-TRACE-CONTEXT
-// X-FORWARDED-PROTO
-
-// some requests
-// Your application should handle the special country code ZZ (unknown country).
-// X-AppEngine-Country        # ISO 3166-1 alpha-2 country code
-
-// X-AppEngine-Region
 
 // Headers to set: Strict-Transport-Security: max-age=31536000; includeSubDomains
 
@@ -108,11 +91,25 @@ func logEnv() {
 	fmt.Println("MY_ENV", my)
 }
 
+// some requests
+// Your application should handle the special country code ZZ (unknown country).
+// X-AppEngine-Country        # ISO 3166-1 alpha-2 country code
+
+// X-AppEngine-Region
 func landing(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
+
+	// The following HTTP headers are now included with all requests:
+	xfor := r.Header.Get("X-FORWARDED-FOR")
+	fmt.Println("X-FORWARDED-FOR", xfor)
+	xctx := r.Header.Get("X-CLOUD-TRACE-CONTEXT")
+	fmt.Println("X-CLOUD-TRACE-CONTEXT", xctx)
+	xproto := r.Header.Get("X-FORWARDED-PROTO")
+	fmt.Println("X-FORWARDED-PROTO", xproto)
+
 	fmt.Fprint(w, landingPage)
 }
 

@@ -21,13 +21,13 @@ help:
 	@echo "** $(PROG) v$(VERSION)   [ project: $(projectID) ] **"
 	@echo ""
 	@echo "Commands:"
-	@echo "    make build         # builds a docker image: $(IMAGE)"
 	@echo "    make ae/push       # push $(IMAGE) to appeninge"
 	@echo "    make ae/deploy     # deploy and start $(REMOTE_IMAGE) as version: dev"
 	@echo "    make ae/start      # start $(REMOTE_IMAGE) as version: dev"
 	@echo "    make ae/stop       # stop $(REMOTE_IMAGE) as version: dev"
 	@echo "    make ae/list       # list services on appengine"
 	@echo "    make ae/tail       # tail log on appengine"
+	@echo "    make build         # builds a docker image: $(IMAGE)"
 	@echo "    make test          # runs the tests"
 	@echo "    make lint          # runs a linter on the source code"
 	@echo "    make list          # shows containers and images"
@@ -59,7 +59,7 @@ build: test lint
 	@docker images $(IMAGE)
 
 .PHONY: ae/push
-ae/push: #build
+ae/push: clean build
 	docker tag $(IMAGE) $(REMOTE_IMAGE)
 	gcloud docker -- push $(REMOTE_IMAGE)
 

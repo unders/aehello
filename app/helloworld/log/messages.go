@@ -45,6 +45,11 @@ func Stopped() {
 	writeInfo(stopped)
 }
 
+// Info logs msg to info
+func Info(info string) {
+	writeInfo(info)
+}
+
 // Error logs errors
 func Error(err error) {
 	msg := fmt.Sprintf(errFormat, err.Error())

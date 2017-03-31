@@ -1,10 +1,8 @@
 FROM alpine:3.5
 MAINTAINER unders <anders.tornqvist@gmail.com>
 
-RUN apk --update upgrade && \
-    apk add ca-certificates && \
-    update-ca-certificates && \
-    rm -rf /var/cache/apk/*
+# https://blog.docker.com/2016/09/docker-golang/
+RUN apk --no-cache add ca-certificates
 
 ADD favicon.ico favicon.ico
 ADD helloworld helloworld

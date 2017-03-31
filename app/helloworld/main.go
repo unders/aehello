@@ -70,7 +70,8 @@ func landing(w http.ResponseWriter, r *http.Request) {
 
 	// FIXME: this will be removed
 	xproto := r.Header.Get("X-FORWARDED-PROTO")
-	fmt.Println("X-FORWARDED-PROTO", xproto)
+	msg := fmt.Sprintf("X-FORWARDED-PROTO:%s", xproto)
+	log.Info(msg)
 
 	if _, err := fmt.Fprint(w, landingPage); err != nil {
 		log.Error(err)

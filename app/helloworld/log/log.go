@@ -62,11 +62,13 @@ func Init(projectID string, localMachine bool) Closer {
 		return c
 	}
 
+	log.Println("Dialed logging Server: OK!")
+
 	client.OnError = func(err error) {
 		log.Println("ERROR ", err)
 	}
 
-	out = client.Logger("helloworld")
+	out = client.Logger("stdout")
 
 	useBackupLog = false
 	return c

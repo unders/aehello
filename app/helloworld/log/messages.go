@@ -4,11 +4,11 @@ import "fmt"
 
 // log messages
 const (
-	started       = "** STARTED ** info=started app=helloworld\n"
+	started       = "\n** STARTED **\ninfo=started app=helloworld\n"
 	release       = "info=version:%s buildstamp:%s githash:%s app=helloworld\n"
 	running       = "info=listens on address %s app=helloworld\n"
-	stopped       = "info=stopped app=helloworld ** STOPPED **\n"
-	gotStopSignal = "info=got signal %s app=helloworld\n"
+	stopped       = "info=stopped app=helloworld\n** STOPPED **\n"
+	gotStopSignal = "\ninfo=got signal %s app=helloworld\n"
 	errFormat     = "err=%s app=hellworld\n"
 )
 

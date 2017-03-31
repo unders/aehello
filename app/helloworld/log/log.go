@@ -12,6 +12,10 @@ import (
 	"cloud.google.com/go/logging"
 )
 
+func init() {
+	log.SetFlags(0)
+}
+
 // Closer closes the client
 type Closer struct {
 	client *logging.Client
@@ -34,8 +38,7 @@ func Close(c io.Closer) {
 	}
 }
 
-var infoLog *log.Logger
-var errorLog *log.Logger
+var out *logging.Logger
 var useBackupLog = true
 
 // Init initialize the logging client for the application
@@ -62,26 +65,36 @@ func Init(projectID string, localMachine bool) Closer {
 		log.Println("ERROR ", err)
 	}
 
-	infoLog = client.Logger("info").StandardLogger(logging.Info)
-	errorLog = client.Logger("error").StandardLogger(logging.Error)
+	out = client.Logger("helloworld")
 
 	useBackupLog = false
 	return c
 }
 
-func writeError(msg string) {
+func writeError(p string) {
 	if useBackupLog {
-		log.Print("ERROR ", msg)
+		log.Print("ERROR ", p)
 		return
 	}
 
-	errorLog.Print(msg)
+	e := logging.Entry{
+		Severity: logging.Error,
+		Payload:  p,
+	}
+
+	out.Log(e)
 }
 
-func writeInfo(msg string) {
+func writeInfo(p string) {
 	if useBackupLog {
-		log.Print("INFO ", msg)
+		log.Print(p)
 		return
 	}
-	infoLog.Print(msg)
+
+	e := logging.Entry{
+		Severity: logging.Info,
+		Payload:  p,
+	}
+
+	out.Log(e)
 }

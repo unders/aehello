@@ -57,7 +57,8 @@ func Init(projectID string, localMachine bool) Closer {
 	c.client = client
 
 	if err := client.Ping(context.TODO()); err != nil {
-		log.Println("Could not Ping logging Client", err)
+		log.Println("ERROR Could not Ping logging Server; error: ", err)
+		log.Printf("STACKTRACE  %+v\n", err)
 		return c
 	}
 

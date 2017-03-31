@@ -23,7 +23,7 @@ health_check:
 
 # if addr := os.Getenv("ADDR"); addr != "" { ... }
 env_variables:
-  MY_ENV: 'MY env from app-dev.yaml'
+  ENVIRONMENT: 'dev'
 
 #skip_files:
 #  - ^Makefile$

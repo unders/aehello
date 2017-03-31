@@ -94,7 +94,6 @@ lint: install
 	--enable-all \
 	--deadline=100s \
 	--line-length=100 \
-	--disable=gas \
 	./...
 
 .PHONY: list
@@ -120,7 +119,7 @@ install:
 
 .PHONY: run
 run: install
-	@$(PROG) -http=$(httpAddr)
+	$(PROG) -http=$(httpAddr) -l
 
 .PHONY: log
 log:

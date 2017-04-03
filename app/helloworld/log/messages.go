@@ -9,7 +9,7 @@ const (
 	running       = "info=listens on address %s app=helloworld\n"
 	stopped       = "info=stopped app=helloworld\n** STOPPED **\n"
 	gotStopSignal = "\ninfo=got signal %s app=helloworld\n"
-	errFormat     = "err=%s stacktrace=%+v app=hellworld\n"
+	errFormat     = "err=%s\nstacktrace=%+v app=hellworld\n"
 )
 
 // Started logs started info

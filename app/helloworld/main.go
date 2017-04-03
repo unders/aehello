@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/unders/aehello/app/helloworld/config"
 	"github.com/unders/aehello/app/helloworld/log"
 	"github.com/unders/aehello/app/pkg/health"
@@ -37,7 +38,7 @@ func main() {
 // Headers to set: Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 func run(o config.Options) bool {
-	l := log.Init(o.GCloudProject, o.Env.IsLocal())
+	l := log.Init(o)
 	defer l.Close()
 
 	http.HandleFunc(health.Handler())
@@ -63,6 +64,10 @@ func run(o config.Options) bool {
 }
 
 func landing(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/error" {
+		log.Error(errors.New("This is an test error"))
+	}
+
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return

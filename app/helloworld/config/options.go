@@ -19,9 +19,9 @@ type Options struct {
 }
 
 type gae struct {
-	service  string
-	version  string
-	instance string
+	Service  string
+	Version  string
+	Instance string
 }
 
 // Server contains the server configuration
@@ -58,6 +58,7 @@ func setFromArgs(args []string, o *Options) {
 }
 
 func setFromEnv(o *Options) error {
+	// GOOGLE_APPLICATION_CREDENTIALS
 	if localMachine {
 		o.Env = local
 		return nil
@@ -73,19 +74,19 @@ func setFromEnv(o *Options) error {
 	if i == "" {
 		return errors.New("ENV: GAE_INSTANCE is not set")
 	}
-	o.GAE.instance = i
+	o.GAE.Instance = i
 
 	s := os.Getenv("GAE_SERVICE")
 	if s == "" {
 		return errors.New("ENV: GAE_SERVICE is not set")
 	}
-	o.GAE.service = s
+	o.GAE.Service = s
 
 	v := os.Getenv("GAE_VERSION")
 	if v == "" {
 		return errors.New("ENV: GAE_VERSION is not set")
 	}
-	o.GAE.version = v
+	o.GAE.Version = v
 
 	e := os.Getenv("ENVIRONMENT")
 	if v == "" {

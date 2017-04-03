@@ -10,6 +10,8 @@ import (
 	"log"
 
 	"cloud.google.com/go/logging"
+	"github.com/unders/aehello/app/helloworld/config"
+	"google.golang.org/genproto/googleapis/api/monitoredres"
 )
 
 func init() {
@@ -42,14 +44,14 @@ var out *logging.Logger
 var useBackupLog = true
 
 // Init initialize the logging client for the application
-func Init(projectID string, localMachine bool) Closer {
+func Init(o config.Options) Closer {
 	c := Closer{}
 
-	if localMachine {
+	if o.Env.IsLocal() {
 		return c
 	}
 
-	client, err := logging.NewClient(context.Background(), projectID)
+	client, err := logging.NewClient(context.Background(), o.GCloudProject)
 	if err != nil {
 		log.Println("Could not create logging Client", err)
 		return c
@@ -62,13 +64,20 @@ func Init(projectID string, localMachine bool) Closer {
 		return c
 	}
 
-	log.Println("Dialed logging Server: OK!")
-
 	client.OnError = func(err error) {
 		log.Println("ERROR ", err)
 	}
 
-	out = client.Logger("helloworld")
+	mr := &monitoredres.MonitoredResource{
+		Type: "gae_app",
+		Labels: map[string]string{
+			"project_id": o.GCloudProject,
+			"version_id": o.GAE.Version,
+			"module_id":  o.GAE.Service,
+		},
+	}
+	opts := logging.CommonResource(mr)
+	out = client.Logger(o.Name, opts)
 
 	useBackupLog = false
 	return c

@@ -4,6 +4,11 @@ env: flex
 
 # https://cloud.google.com/appengine/docs/flexible/go/configuration-files
 # https://cloud.google.com/appengine/docs/flexible/go/configuring-your-app-with-app-yaml
+# https://cloud.google.com/appengine/docs/flexible/go/how-requests-are-handled
+# https://gist.github.com/d-schmidt/587ceec34ce1334a5e60
+# https://gist.github.com/6174/9ff5063a43f0edd82c8186e417aae1dc
+# http://www.kaihag.com/https-and-go/
+# https://www.startssl.com/
 
 # dev
 manual_scaling:
@@ -25,9 +30,11 @@ health_check:
 env_variables:
   ENVIRONMENT: 'dev'
 
-#skip_files:
-#  - ^Makefile$
-#  - ^bin$
+#error_handlers:
+#  - file: default_error.html
+#
+#  - error_code: over_quota
+#    file: over_quota.html
 
 
 #

@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/pkg/errors"
 	"github.com/unders/aehello/app/helloworld/config"
 	"github.com/unders/aehello/app/helloworld/log"
-	"github.com/unders/aehello/app/pkg/health"
+	"github.com/unders/aehello/app/helloworld/mux"
+	"github.com/unders/aehello/app/pkg/http"
 	"github.com/unders/aehello/pkg/signal"
 )
 
@@ -35,52 +35,36 @@ func main() {
 	}
 }
 
-// Headers to set: Strict-Transport-Security: max-age=31536000; includeSubDomains
-
 func run(o config.Options) bool {
 	l := log.Init(o)
 	defer l.Close()
 
-	http.HandleFunc(health.Handler())
-	http.HandleFunc("/", landing)
+	errChan := make(chan error, 1)
+	s := http.Server{
+		Addr:         o.HTTP.Addr,
+		ReadTimeout:  o.HTTP.ReadTimeout,
+		WriteTimeout: o.HTTP.WriteTimeout,
+		ShutdownWait: o.HTTP.ShutdownWait,
+		Mux:          mux.New(),
+	}
 
-	ch := make(chan error, 1)
-	go func() {
-		ch <- http.ListenAndServe(o.Server.Addr, nil)
-	}()
+	s.Start(errChan)
+	log.Running(o.HTTP.Addr)
 
-	log.Running(o.Server.Addr)
-
+	res := true
 	select {
-	case err := <-ch:
+	case err := <-errChan:
 		log.Error(err)
 		log.Stopped()
-		return false
+		res = false
 	case sig := <-signal.Wait():
 		log.GotStopSignal(sig)
 		log.Stopped()
-		return true
 	}
+
+	if err := s.Stop(); err != nil {
+		res = false
+		log.Error(errors.WithStack(err))
+	}
+	return res
 }
-
-func landing(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/error" {
-		log.Error(errors.New("This is an test error"))
-	}
-
-	if r.URL.Path != "/" {
-		http.NotFound(w, r)
-		return
-	}
-
-	// FIXME: this will be removed
-	xproto := r.Header.Get("X-FORWARDED-PROTO")
-	msg := fmt.Sprintf("X-FORWARDED-PROTO:%s", xproto)
-	log.Info(msg)
-
-	if _, err := fmt.Fprint(w, landingPage); err != nil {
-		log.Error(err)
-	}
-}
-
-const landingPage = "Welcome to Hellow world\n"

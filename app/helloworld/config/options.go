@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"os"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -13,7 +14,7 @@ var localMachine = false
 type Options struct {
 	Name          string
 	Env           env
-	Server        server
+	HTTP          http
 	GCloudProject string
 	GAE           gae
 }
@@ -24,9 +25,12 @@ type gae struct {
 	Instance string
 }
 
-// Server contains the server configuration
-type server struct {
-	Addr string
+// HTTP contains the http configuration
+type http struct {
+	Addr         string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	ShutdownWait time.Duration
 }
 
 type env string
@@ -54,7 +58,12 @@ func setFromArgs(args []string, o *Options) {
 	flag.Parse()
 
 	localMachine = l
-	o.Server.Addr = addr
+	o.HTTP = http{
+		Addr:         addr,
+		ReadTimeout:  3 * time.Second,
+		WriteTimeout: 3 * time.Second,
+		ShutdownWait: 5 * time.Second,
+	}
 }
 
 func setFromEnv(o *Options) error {

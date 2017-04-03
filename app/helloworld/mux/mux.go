@@ -1,13 +1,13 @@
 package mux
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/unders/aehello/app/helloworld/log"
 	"github.com/unders/aehello/app/pkg/health"
 )
 
+// New returns http.Handler
 func New() http.Handler {
 	m := http.NewServeMux()
 	m.HandleFunc(health.Handler())
@@ -21,14 +21,9 @@ func landing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// FIXME: this will be removed
-	xproto := r.Header.Get("X-FORWARDED-PROTO")
-	msg := fmt.Sprintf("X-FORWARDED-PROTO:%s", xproto)
-	log.Info(msg)
-
-	if _, err := fmt.Fprint(w, landingPage); err != nil {
+	if _, err := w.Write(landingPage); err != nil {
 		log.Error(err)
 	}
 }
 
-const landingPage = "Welcome to Hellow world\n"
+var landingPage = []byte("Welcome to Hellow world\n")

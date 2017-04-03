@@ -18,7 +18,7 @@ type Server struct {
 	srv *http.Server
 }
 
-func (s Server) Start(errChan chan<- error) {
+func (s Server) Start() chan error {
 	s.srv = &http.Server{
 		Addr:         s.Addr,
 		ReadTimeout:  s.ReadTimeout,
@@ -26,11 +26,14 @@ func (s Server) Start(errChan chan<- error) {
 		Handler:      s.Mux,
 	}
 
+	ch := make(chan error, 1)
+
 	go func() {
 		// ListenAndServe always returns a non-nil error.
-		errChan <- s.srv.ListenAndServe()
+		ch <- s.srv.ListenAndServe()
 	}()
 
+	return ch
 }
 
 func (s Server) Stop() error {

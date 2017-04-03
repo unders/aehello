@@ -30,16 +30,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	if ok := run(o); !ok {
+	if err := run(o); err != nil {
 		os.Exit(1)
 	}
 }
 
-func run(o config.Options) bool {
+func run(o config.Options) error {
+	var err error
+
 	l := log.Init(o)
 	defer l.Close()
 
-	errChan := make(chan error, 1)
 	s := http.Server{
 		Addr:         o.HTTP.Addr,
 		ReadTimeout:  o.HTTP.ReadTimeout,
@@ -48,23 +49,20 @@ func run(o config.Options) bool {
 		Mux:          mux.New(),
 	}
 
-	s.Start(errChan)
 	log.Running(o.HTTP.Addr)
 
-	res := true
 	select {
-	case err := <-errChan:
+	case err = <-s.Start():
 		log.Error(err)
 		log.Stopped()
-		res = false
 	case sig := <-signal.Wait():
 		log.GotStopSignal(sig)
 		log.Stopped()
 	}
 
-	if err := s.Stop(); err != nil {
-		res = false
+	if err = s.Stop(); err != nil {
 		log.Error(errors.WithStack(err))
 	}
-	return res
+
+	return errors.WithStack(err)
 }

@@ -68,7 +68,7 @@ func Init(projectID string, localMachine bool) Closer {
 		log.Println("ERROR ", err)
 	}
 
-	out = client.Logger("stdout")
+	out = client.Logger("helloworld")
 
 	useBackupLog = false
 	return c

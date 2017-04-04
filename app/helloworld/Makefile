@@ -10,6 +10,7 @@ http?=":10080"
 httpAddr=$(http)
 httpPort=$(shell echo "$(http)" | sed 's/\://g')
 
+env=dev
 # appengine projectID
 # projectID="your project id"
 SERVICE_NAME=default
@@ -21,12 +22,13 @@ help:
 	@echo "** $(PROG) v$(VERSION)   [ project: $(projectID) ] **"
 	@echo ""
 	@echo "Commands:"
-	@echo "    make ae/push       # push $(IMAGE) to appeninge"
-	@echo "    make ae/deploy     # deploy and start $(REMOTE_IMAGE) as version: dev"
-	@echo "    make ae/start      # start $(REMOTE_IMAGE) as version: dev"
-	@echo "    make ae/stop       # stop $(REMOTE_IMAGE) as version: dev"
-	@echo "    make ae/list       # list services on appengine"
-	@echo "    make ae/tail       # tail log on appengine"
+	@echo "    make $(env)/push      # push $(IMAGE) to appeninge"
+	@echo "    make $(env)/deploy    # deploy and start $(REMOTE_IMAGE) as version: dev"
+	@echo "    make $(env)/start     # start $(REMOTE_IMAGE) as version: dev"
+	@echo "    make $(env)/stop      # stop $(REMOTE_IMAGE) as version: dev"
+	@echo "    make $(env)/list      # list services on appengine"
+	@echo "    make $(env)/tail      # tail log on appengine"
+	@echo ""
 	@echo "    make build         # builds a docker image: $(IMAGE)"
 	@echo "    make test          # runs the tests"
 	@echo "    make lint          # runs a linter on the source code"
@@ -54,34 +56,34 @@ help:
 build: test lint
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(LDFLAGS)
 	@file $(PROG)
-	docker build -t $(IMAGE) .
+	docker build -f support/Dockerfile -t $(IMAGE) .
 	@rm $(PROG)
 	@docker images $(IMAGE)
 
-.PHONY: ae/push
-ae/push: clean build
+.PHONY: $(env)/push
+$(env)/push: clean build
 	docker tag $(IMAGE) $(REMOTE_IMAGE)
 	gcloud docker -- push $(REMOTE_IMAGE)
 
-.PHONY: ae/deploy
-ae/deploy:
-	gcloud app deploy app-dev.yaml --image-url $(REMOTE_IMAGE) --version dev
+.PHONY: $(env)/deploy
+$(env)/deploy:
+	gcloud app deploy support/app-$(dev).yaml --image-url $(REMOTE_IMAGE) --version dev
 
-.PHONY: ae/start
-ae/start:
+.PHONY: $(env)/start
+$(env)/start:
 	gcloud app versions start dev --service=$(SERVICE_NAME)
 
-.PHONY: ae/stop
-ae/stop:
+.PHONY: $(env)/stop
+$(env)/stop:
 	gcloud app versions stop dev --service=$(SERVICE_NAME)
 .PHONY: ae/stop
 
-.PHONY: ae/list
-ae/list:
+.PHONY: $(env)/list
+$(env)/list:
 	gcloud app versions list --service=$(SERVICE_NAME)
 
-.PHONY: ae/tail
-ae/tail:
+.PHONY: $(env)/tail
+$(env)/tail:
 	gcloud app logs tail --service=$(SERVICE_NAME)
 
 .PHONY: test

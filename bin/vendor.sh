@@ -56,7 +56,7 @@ list() {
 	echo ""
 	for pkg in $pkgs
 	do
-		if [[ "$pkg" != *github.com/unders/world* ]]; then
+		if [[ "$pkg" != *github.com/unders/aehello* ]]; then
 			echo "    $pkg"
 		fi
 	done

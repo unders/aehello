@@ -67,7 +67,7 @@ $(env)/push: clean build
 
 .PHONY: $(env)/deploy
 $(env)/deploy:
-	gcloud app deploy support/app-$(dev).yaml --image-url $(REMOTE_IMAGE) --version dev
+	gcloud app deploy support/app-$(env).yaml --image-url $(REMOTE_IMAGE) --version dev
 
 .PHONY: $(env)/start
 $(env)/start:

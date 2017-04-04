@@ -28,6 +28,7 @@ type gae struct {
 // HTTP contains the http configuration
 type http struct {
 	Addr         string
+	Host         string
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 	ShutdownWait time.Duration
@@ -67,9 +68,9 @@ func setFromArgs(args []string, o *Options) {
 }
 
 func setFromEnv(o *Options) error {
-	// GOOGLE_APPLICATION_CREDENTIALS
 	if localMachine {
 		o.Env = local
+		o.HTTP.Host = "localhost"
 		return nil
 	}
 
@@ -96,6 +97,12 @@ func setFromEnv(o *Options) error {
 		return errors.New("ENV: GAE_VERSION is not set")
 	}
 	o.GAE.Version = v
+
+	h := os.Getenv("HOST")
+	if v == "" {
+		return errors.New("ENV: HOST is not set")
+	}
+	o.HTTP.Host = h
 
 	e := os.Getenv("ENVIRONMENT")
 	if v == "" {

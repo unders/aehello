@@ -46,10 +46,11 @@ func run(o config.Options) error {
 		ReadTimeout:  o.HTTP.ReadTimeout,
 		WriteTimeout: o.HTTP.WriteTimeout,
 		ShutdownWait: o.HTTP.ShutdownWait,
-		Mux:          mux.New(),
+		Mux:          mux.New(o.HTTP.Host),
 	}
 
 	log.Running(o.HTTP.Addr)
+	log.Host(o.HTTP.Host)
 
 	select {
 	case err = <-s.Start():

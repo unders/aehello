@@ -5,14 +5,23 @@ import (
 
 	"github.com/unders/aehello/app/helloworld/log"
 	"github.com/unders/aehello/app/pkg/health"
+	"github.com/unders/aehello/app/pkg/secure"
 )
 
 // New returns http.Handler
-func New() http.Handler {
+//
+// Usage :
+//         m := mux.New("example.com")
+//
+func New(host string) http.Handler {
 	m := http.NewServeMux()
 	m.HandleFunc(health.Handler())
 	m.HandleFunc("/", landing)
-	return m
+
+	return &secure.Handler{
+		Mux:        m,
+		RedirectTo: "https://" + host + ":443",
+	}
 }
 
 func landing(w http.ResponseWriter, r *http.Request) {

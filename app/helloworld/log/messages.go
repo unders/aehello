@@ -7,6 +7,7 @@ const (
 	started       = "\n** STARTED **\ninfo=started app=helloworld\n"
 	release       = "info=version:%s buildstamp:%s githash:%s app=helloworld\n"
 	running       = "info=listens on address %s app=helloworld\n"
+	hostname      = "info=hostname:%s app=helloworld\n"
 	stopped       = "info=stopped app=helloworld\n** STOPPED **\n"
 	gotStopSignal = "\ninfo=got signal %s app=helloworld\n"
 	errFormat     = "err=%s\nstacktrace=%+v app=hellworld\n"
@@ -26,6 +27,12 @@ func Release(version, buildStamp, gitHash string) {
 // Running logs running info
 func Running(addr string) {
 	msg := fmt.Sprintf(running, addr)
+	writeInfo(msg)
+}
+
+// Host logs running info
+func Host(host string) {
+	msg := fmt.Sprintf(hostname, host)
 	writeInfo(msg)
 }
 

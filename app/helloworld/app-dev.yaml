@@ -29,6 +29,7 @@ health_check:
 # if addr := os.Getenv("ADDR"); addr != "" { ... }
 env_variables:
   ENVIRONMENT: 'dev'
+  HOST: "project-id.appspot.com"
 
 #error_handlers:
 #  - file: default_error.html

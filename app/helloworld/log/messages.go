@@ -8,6 +8,7 @@ const (
 	release       = "info=version:%s buildstamp:%s githash:%s app=helloworld\n"
 	running       = "info=listens on address %s app=helloworld\n"
 	hostname      = "info=hostname:%s app=helloworld\n"
+	stopping      = "info=stopping app=helloworld"
 	stopped       = "info=stopped app=helloworld\n** STOPPED **\n"
 	gotStopSignal = "\ninfo=got signal %s app=helloworld\n"
 	errFormat     = "err=%s\nstacktrace=%+v app=hellworld\n"
@@ -50,6 +51,11 @@ func Config(config string) {
 // Stopped logs stop info
 func Stopped() {
 	writeInfo(stopped)
+}
+
+// Stopping logs stopping info
+func Stopping() {
+	writeInfo(stopping)
 }
 
 // Info logs msg to info

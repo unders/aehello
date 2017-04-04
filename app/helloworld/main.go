@@ -55,15 +55,16 @@ func run(o config.Options) error {
 	select {
 	case err = <-s.Start():
 		log.Error(err)
-		log.Stopped()
+		log.Stopping()
 	case sig := <-signal.Wait():
 		log.GotStopSignal(sig)
-		log.Stopped()
+		log.Stopping()
 	}
 
 	if err = s.Stop(); err != nil {
 		log.Error(errors.WithStack(err))
 	}
+	log.Stopped()
 
-	return errors.WithStack(err)
+	return err
 }

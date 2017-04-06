@@ -35,4 +35,4 @@ func landing(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var landingPage = []byte("Welcome to Hellow world\n")
+var landingPage = []byte("Welcome to Hellow world 2\n")

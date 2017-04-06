@@ -24,6 +24,18 @@ main() {
 
     echo "    golang.org/x/oauth2"
     go get -u golang.org/x/oauth2
+
+    echo "    golang.org/x/sync/semaphore"
+    go get -u golang.org/x/sync/semaphore
+
+    echo "    google.golang.org/genproto/googleapis/api/monitoredres"
+    go get -u google.golang.org/genproto/googleapis/api/monitoredres
+
+    echo "    google.golang.org/genproto/googleapis/logging/type"
+    go get -u google.golang.org/genproto/googleapis/logging/type
+
+    echo "    google.golang.org/genproto/googleapis/logging/v2"
+    go get -u google.golang.org/genproto/googleapis/logging/v2
 }
 
 main

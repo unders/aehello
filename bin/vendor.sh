@@ -4,7 +4,11 @@ set -e
 
 readonly PACKAGES=(
 	"github.com/pkg/errors"
-	"cloud.google.com/go/logging"
+	"google.golang.org/appengine"
+	"cloud.google.com/go"
+	"google.golang.org/genproto/googleapis/api"
+	"google.golang.org/api/googleapi"
+	"golang.org/x/net/context"
 )
 
 main() {

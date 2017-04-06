@@ -21,7 +21,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 
 	log.Infof(ctx, "Unders Request: %s", r.RequestURI)
-	fmt.Fprint(w, "Hello, world 10! (Standard Environment)")
+	fmt.Fprint(w, "Hello, world 11! (Standard Environment)")
 
 	client, err := storage.NewClient(ctx)
 	if err != nil {

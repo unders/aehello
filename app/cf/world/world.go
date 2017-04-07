@@ -14,6 +14,22 @@ import (
 func init() {
 	http.HandleFunc("/_ah/warmup", warmupHandler)
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/secret/", secret)
+}
+
+func secret(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	u := user.Current(ctx)
+	if u == nil {
+		code := http.StatusUnauthorized
+		http.Error(w, http.StatusText(code), code)
+		return
+	}
+
+	log.Infof(ctx, "User: %#v", u)
+
+	w.Header().Set("Content-type", "text/html; charset=utf-8")
+	fmt.Fprintf(w, `<h1>World %s!</h1> <p>this is a secret XX page</p>`, u)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {

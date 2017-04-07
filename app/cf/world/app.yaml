@@ -1,9 +1,7 @@
-service: hello
+service: world
 runtime: go
 api_version: go1
 
-# /Users/unders/go1.6/bin
-# export PATH=/Users/unders/go1.6/bin:$PATH
 
 # When using automatic scaling, the F1, F2, F4, and F4_1G instance classes are available.
 #instance_class: F1
@@ -19,18 +17,13 @@ inbound_services:
   - warmup
 
 handlers:
-
 - url: /_ah/warmup
   script: _go_app
   login: admin
 
-- url: /secret/*
+- url: /*
   secure: always
   login: required
-  script: _go_app
-
-- url: /.*
-  secure: always
   script: _go_app
 
 

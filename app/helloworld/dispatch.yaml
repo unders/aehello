@@ -1,0 +1,9 @@
+dispatch:
+
+  - url: "*/hello/*"
+    service: hello
+
+  - url: "*/world*"
+    service: world
+
+# The dispatch file can contain up to 20 routing rules.

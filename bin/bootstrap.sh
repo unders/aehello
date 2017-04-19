@@ -36,6 +36,12 @@ main() {
 
     echo "    google.golang.org/genproto/googleapis/logging/v2"
     go get -u google.golang.org/genproto/googleapis/logging/v2
+
+    echo "    github.com/dgrijalva/jwt-go"
+    go get -u github.com/dgrijalva/jwt-go
+
+    echo "github.com/someone1/gcp-jwt-go"
+    go get -u github.com/someone1/gcp-jwt-go
 }
 
 main
